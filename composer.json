@@ -48,5 +48,5 @@
     "config": {
         "bin-dir": "vendor/bin",
         "vendor-dir": "fuel/vendor"
-    },
+    }
 }
