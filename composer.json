@@ -44,7 +44,7 @@
             "php oil r install"
         ]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
     "config": {
         "bin-dir": "vendor/bin",
         "vendor-dir": "fuel/vendor"
