@@ -5,8 +5,9 @@
 		'method' => 'post',
 	];
     // プルダウンの設定
-    $envDefault = 'jp';
+    $envDefault = 'uhuru-dev';
     $envSelect = [
+        'uhuru-dev' => 'uhuru-backend-dev',
         'jp' => 'sato-backend-jp',
         'qa' => 'sato-backend-qa',
     ];

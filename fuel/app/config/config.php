@@ -8,10 +8,12 @@ return array(
         'endpoint_base' => [
             'jp' => 'https://sato-backend-jp.herokuapp.com',
             'qa' => 'https://sato-backend-qa.herokuapp.com',
+            'uhuru-dev' => 'https://uhuru-backend-dev.herokuapp.com',
         ],
         'db_url' => [
             'jp' => 'postgres://u7vgl9r10qfntl:p4hfsr35juk47aah400n7p5dbp8@ec2-52-204-14-54.compute-1.amazonaws.com:5432/d8rgg27101kp2c',
             'qa' => 'postgres://uevp4jld7h6gj5:pdoup8kavf1jn5fu0c1t76h6j3h@ec2-54-163-243-181.compute-1.amazonaws.com:5442/d8lfgqe8omi0tt',
+            'uhuru-dev' => 'postgres://rqsikbszfhnrmu:DGM9PzWljhplusP6aHHK3yfr5e@ec2-54-243-48-181.compute-1.amazonaws.com:5432/dfej2kn2f46e0r',
         ],
     ],
 
@@ -25,7 +27,7 @@ return array(
 	/**
 	 * Internal string encoding charset
 	 */
-	// 'encoding'  => 'UTF-8',
+	'encoding'  => 'UTF-8',
 
 	/**
 	 * DateTime settings
@@ -46,9 +48,9 @@ return array(
 	 * Fuel::L_INFO
 	 * Fuel::L_ALL
 	 */
-	// 'log_threshold'    => Fuel::L_WARNING,
-	// 'log_path'         => APPPATH.'logs/',
-	//'log_date_format'  => 'Y-m-d H:i:s',
+	'log_threshold'    => Fuel::L_ALL,
+	'log_path'         => APPPATH.'logs/',
+	'log_date_format'  => 'Y-m-d H:i:s',
 
 	/**
 	 * Security settings

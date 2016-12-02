@@ -1,10 +1,13 @@
 <?php
 
-// @task 小林
-// 共通テンプレを使って画面の行き来を可能にしたい
-// http://qiita.com/kiimiiis/items/a015399455ef9c0f1659
+require_once(APPPATH . 'modules/phpMQTT.php');
 
-
+/**
+ *
+ * @task 小林
+ * 共通テンプレを使って画面の行き来を可能にしたい
+ * http://qiita.com/kiimiiis/items/a015399455ef9c0f1659
+ */
 class Controller_Mqttpublish extends Controller
 {
     public $_viewBasePath = 'mqttpublish/';
@@ -20,6 +23,11 @@ class Controller_Mqttpublish extends Controller
      */
 	public function get_index()
 	{
+        // http://mqtt_pub.com/?mqtt=1
+        if(Input::get('mqtt')) {
+           $this->send_mqtt();
+        }
+
         $viewPath = $this->_viewBasePath . 'index';
 		return Response::forge(View::forge($viewPath));
 	}
@@ -42,6 +50,55 @@ class Controller_Mqttpublish extends Controller
         $this->registVirtualPrinter();
 		return Response::forge(View::forge($viewPath));
     }
+
+    /**
+     * mqttブローカーへメッセージを投げる
+     */
+	public function send_mqtt()
+    {
+//echo "exec mqtt send" . "<br>";
+
+		try
+        {
+
+$clean = true;
+$will = NULL;
+$username = "b44ac8a6-3178-4bdf-aa95-685a48527873";
+$password = "liccw4mgl0lrf3ipdfDUe3g9V5SHrA0o0H2i6CYmzx4=";
+
+            // configに入れる（4BBBBBBB）
+			$mqtt_host = "sato.broker.xively.com"; // MQTT ブローカー
+            $mqtt_clientid = $username; // クライアントID
+            $mqtt_port = 8883; // MQTT ポート番号
+            $mqtt = new phpMQTT($mqtt_host, $mqtt_port, $mqtt_clientid);
+
+//var_dump($mqtt); die;
+echo "try mqtt connect" . "<br>";
+
+//            $mqtt->debug = true; // debugモード
+			if($mqtt->connect($clean, $will, $username, $password))
+//			if($mqtt->connect())
+            {
+echo "try mqtt publish" . "<br>";
+                // 変数化する
+                $mqtt_topic = "xi/blue/v1/eb309b2d-5a8d-495c-b73d-9f69978747d4/d/b44ac8a6-3178-4bdf-aa95-685a48527873/RPCreq"; // トピック文字列
+                $mqtt_message = '{"method": "set_settings", "params": [{"id":"cat.short/configTbl.pdd.speed","value":8}], "id": 61192}'; # パブリッシュするメッセージ
+
+				$mqtt->publish($mqtt_topic, $mqtt_message, 0);
+				$mqtt->close();
+echo "end mqtt publish" . "<br>";
+			}
+            else
+            {
+echo "conect false!!";
+			}
+		}
+        catch (Exception $e)
+        {
+			var_dump($e);
+		}
+	}
+
 
     /**
      * 指定した環境のbackendの情報を設定します
