@@ -15,7 +15,8 @@ class Controller_Mqttpublish extends Controller
     public $_db_url;
     public $_xi_username;
     public $_xi_password;
-    public $_printer_serial;
+    public $_printer_serial; // シリアル番号
+    public $_regist_type; // 登録種別
 
     /**
      * GET
@@ -23,11 +24,6 @@ class Controller_Mqttpublish extends Controller
      */
 	public function get_index()
 	{
-        // http://mqtt_pub.com/?mqtt=1
-        if(Input::get('mqtt')) {
-           $this->send_mqtt();
-        }
-
         $viewPath = $this->_viewBasePath . 'index';
 		return Response::forge(View::forge($viewPath));
 	}
@@ -45,59 +41,28 @@ class Controller_Mqttpublish extends Controller
             $this->set_sos_config($regist_env);
         }
 
-        // シリアルがあったら仮想プリンタを登録
+        $this->_regist_type = Input::post('regist_type', '');
         $this->_printer_serial = Input::post('printer_serial', '');
-        $this->registVirtualPrinter();
+
+        // 種別があれば分岐
+        if($this->_regist_type != '') {
+            switch($this->_regist_type) {
+                case 'serial' :
+                    // シリアル登録
+                    $this->registPrinterSerial();
+                    break;
+                case 'printer' :
+                    // 仮想プリンタ登録
+                    $this->registVirtualPrinter();
+                    break;
+                default :
+                    // 何もしない
+                    break;
+            }
+        }
+
 		return Response::forge(View::forge($viewPath));
     }
-
-    /**
-     * mqttブローカーへメッセージを投げる
-     */
-	public function send_mqtt()
-    {
-//echo "exec mqtt send" . "<br>";
-
-		try
-        {
-
-$clean = true;
-$will = NULL;
-$username = "b44ac8a6-3178-4bdf-aa95-685a48527873";
-$password = "liccw4mgl0lrf3ipdfDUe3g9V5SHrA0o0H2i6CYmzx4=";
-
-            // configに入れる（4BBBBBBB）
-			$mqtt_host = "sato.broker.xively.com"; // MQTT ブローカー
-            $mqtt_clientid = $username; // クライアントID
-            $mqtt_port = 8883; // MQTT ポート番号
-            $mqtt = new phpMQTT($mqtt_host, $mqtt_port, $mqtt_clientid);
-
-//var_dump($mqtt); die;
-echo "try mqtt connect" . "<br>";
-
-//            $mqtt->debug = true; // debugモード
-			if($mqtt->connect($clean, $will, $username, $password))
-//			if($mqtt->connect())
-            {
-echo "try mqtt publish" . "<br>";
-                // 変数化する
-                $mqtt_topic = "xi/blue/v1/eb309b2d-5a8d-495c-b73d-9f69978747d4/d/b44ac8a6-3178-4bdf-aa95-685a48527873/RPCreq"; // トピック文字列
-                $mqtt_message = '{"method": "set_settings", "params": [{"id":"cat.short/configTbl.pdd.speed","value":8}], "id": 61192}'; # パブリッシュするメッセージ
-
-				$mqtt->publish($mqtt_topic, $mqtt_message, 0);
-				$mqtt->close();
-echo "end mqtt publish" . "<br>";
-			}
-            else
-            {
-echo "conect false!!";
-			}
-		}
-        catch (Exception $e)
-        {
-			var_dump($e);
-		}
-	}
 
 
     /**
@@ -170,6 +135,22 @@ echo "conect false!!";
      */
     public function find_asset()
     {
+        // メッセージ切り替え
+        $typeMessage = '';
+        switch($this->_regist_type) {
+            case 'serial' :
+                $typeMessage = 'シリアル登録';
+                break;
+            case 'printer' :
+                // 仮想プリンタ登録
+                $typeMessage = '仮想プリンタ登録';
+                break;
+            default :
+                // 何もしない
+                break;
+        }
+
+
         $url = parse_url($this->_db_url);
         $dsn = sprintf('pgsql:host=%s;dbname=%s port=%s', $url['host'], substr($url['path'], 1), $url['port']);
         $pdo = new \PDO($dsn, $url['user'], $url['pass']);
@@ -179,13 +160,35 @@ echo "conect false!!";
         );
         $result = $stmt->fetchAll();
         foreach ($result as $row) {
+            echo $typeMessage;
+            echo "<br>";
             echo 'シリアル = ' . $row['serialnumber'];
-            echo "\n";
+            echo "<br>";
             echo 'アソシエーションコード = ' . $row['association_code__c'];
-            echo "\n";
+            echo "<br>";
         }
         unset($pdo);
     }
+
+    /**
+     * シリアル登録
+     */
+    public function registPrinterSerial()
+    {
+        try
+        {
+            // データ登録
+            $this->regist_data();
+
+            // 対象レコードのアソシエーションコード取得
+            $this->find_asset();
+        }
+        catch (\Exception $e)
+        {
+            var_dump($e);
+        }
+    }
+
 
     /**
      * 仮想プリンタ追加

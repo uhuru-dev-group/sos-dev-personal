@@ -7,7 +7,7 @@
     // プルダウンの設定
     $envDefault = 'uhuru-dev';
     $envSelect = [
-        'uhuru-dev' => 'uhuru-backend-dev',
+        'dev' => 'uhuru-backend-dev',
         'jp' => 'sato-backend-jp',
         'qa' => 'sato-backend-qa',
     ];
@@ -25,16 +25,31 @@
 </head>
 <body>
 
-<!-- ここまでヘッダー -->
-
-<div>
-	<?= Form::open($formAttr); // フォームの開きタグ ?>
-        <p>シリアル：<?= Form::input('printer_serial'); ?></p>
-        <p>登録先：<?= Form::select('regist_env', $envDefault, $envSelect);?></p>
-		<p><?= Form::button('submit', '登録'); ?></p>
-	<?= Form::close(); // フォームの閉じタグ ?>
+<div class="container">
+    <div class="mt-1">
+        <hr>
+        <h2>シリアル番号登録</h2>
+        <div>
+            <?= Form::open($formAttr); // フォームの開きタグ ?>
+                <p>シリアル番号：<?= Form::input('printer_serial'); ?></p>
+                <p>登録先アプリ：<?= Form::select('regist_env', $envDefault, $envSelect);?></p>
+                <?= Form::hidden('regist_type', 'serial'); ?>
+                <p><?= Form::button('submit', '登録'); ?></p>
+            <?= Form::close(); // フォームの閉じタグ ?>
+        </div>
+        <hr>
+        <h2>仮想プリンタ追加</h2>
+        <div>
+            <?= Form::open($formAttr); // フォームの開きタグ ?>
+                <p>シリアル番号：<?= Form::input('printer_serial'); ?></p>
+                <p>登録先アプリ：<?= Form::select('regist_env', $envDefault, $envSelect);?></p>
+                <?= Form::hidden('regist_type', 'printer'); ?>
+                <p><?= Form::button('submit', '登録'); ?></p>
+            <?= Form::close(); // フォームの閉じタグ ?>
+        </div>
+        <hr>
+    </div>
 </div>
-
 <!-- こっからフッター -->
 
 </body>
