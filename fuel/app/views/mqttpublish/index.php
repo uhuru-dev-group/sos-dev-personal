@@ -5,12 +5,8 @@
 		'method' => 'post',
 	];
     // プルダウンの設定
-    $envDefault = 'uhuru-dev';
-    $envSelect = [
-        'dev' => 'uhuru-backend-dev',
-        'jp' => 'sato-backend-jp',
-        'qa' => 'sato-backend-qa',
-    ];
+    $envDefault = Config::get('sosConf.env_default');
+    $envSelect = Config::get('sosConf.app_name');
 ?>
 <!DOCTYPE html>
 <html lang="ja">

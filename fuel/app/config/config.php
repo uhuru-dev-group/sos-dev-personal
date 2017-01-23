@@ -2,18 +2,26 @@
 
 return array(
     'sosConf' => [
+        'env_default' => 'dev',
         'creation_key' => 'YMlMd2TsjWZLTY3w9MHL0JydaWCSAKxXVW00SFg3WW1raz0H',
         'manufacture_key' => '23354f6dffee134ba486e16f61324bc5af57aef491847e8a989d1d373b0b391d',
-        'assoc_private_key' => '23354f6dffee134ba486e16f61324bc5af57aef491847e8a989d1d373b0b391d',
         'endpoint_base' => [
             'dev' => 'https://uhuru-backend-dev.herokuapp.com',
             'jp' => 'https://sato-backend-jp.herokuapp.com',
             'qa' => 'https://sato-backend-qa.herokuapp.com',
+            'rehearsal' => 'https://sato-backend-rehearsal.herokuapp.com',
+        ],
+        'app_name' => [
+            'dev' => 'uhuru-backend-dev',
+            'jp' => 'sato-backend-jp',
+            'qa' => 'sato-backend-qa',
+            'rehearsal' => 'sato-backend-rehearsal',
         ],
         'db_url' => [
             'dev' => 'postgres://ub2e4mcq5hihpf:pfcskdnsgat3rionm10ru8vq4t@ec2-34-193-149-96.compute-1.amazonaws.com:5432/d2gcsjum1j30bt',
             'jp' => 'postgres://u7vgl9r10qfntl:p4hfsr35juk47aah400n7p5dbp8@ec2-52-204-14-54.compute-1.amazonaws.com:5432/d8rgg27101kp2c',
             'qa' => 'postgres://uevp4jld7h6gj5:pdoup8kavf1jn5fu0c1t76h6j3h@ec2-54-163-243-181.compute-1.amazonaws.com:5442/d8lfgqe8omi0tt',
+            'rehearsal' => 'postgres://udhtijbo0107oc:p38c7d45452e65967dded5bc85dccd94928159ba3d95cd6220179e470b6c8485b@ec2-54-204-10-244.compute-1.amazonaws.com:5432/d77ghs7edo4pkm',
         ],
     ],
 

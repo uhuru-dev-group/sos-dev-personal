@@ -203,7 +203,6 @@ class Controller_Mqttpublish extends Controller
             // ザイブリーに登録
             $resultJson = $this->regist_xivlely();
             $resultArray = json_decode($resultJson, true);
-
             $this->_xi_username = $resultArray['xi_username'];
             $this->_xi_password = $resultArray['xi_password'];
 
